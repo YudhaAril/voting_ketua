@@ -14,8 +14,6 @@ if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1) {
     exit();
 }
 
-// Kode selanjutnya tetap sama...
-
 // Periksa apakah user sudah memilih
 $user_id = $_SESSION['id'];
 $check_vote = $conn->prepare("SELECT has_voted FROM users WHERE id = ?");
@@ -30,9 +28,9 @@ if ($has_voted) {
     exit();
 }
 
+// Query untuk mendapatkan data kandidat lengkap (termasuk foto, visi, misi)
 $result = $conn->query("SELECT * FROM kandidat");
 ?>
-<!-- HTML tetap sama -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -48,6 +46,8 @@ $result = $conn->query("SELECT * FROM kandidat");
             --light: #f8f9fa;
             --dark: #212529;
             --success: #4cc9f0;
+            --card-bg: rgba(255, 255, 255, 0.07);
+            --card-border: rgba(255, 255, 255, 0.1);
         }
         
         * {
@@ -71,7 +71,7 @@ $result = $conn->query("SELECT * FROM kandidat");
         
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 1200px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -97,7 +97,7 @@ $result = $conn->query("SELECT * FROM kandidat");
         }
         
         h2 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 25px;
             font-weight: 700;
             background: linear-gradient(to right, #fff, #f8f9fa);
@@ -120,90 +120,140 @@ $result = $conn->query("SELECT * FROM kandidat");
         }
         
         .form-description {
-            font-size: 1rem;
-            margin-bottom: 30px;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
             opacity: 0.9;
             line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
-        .kandidat-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+        .kandidat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
         
         .kandidat-option {
             display: none;
         }
         
-        .kandidat-label {
-            display: flex;
-            align-items: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+        .kandidat-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 0;
             transition: all 0.3s ease;
             cursor: pointer;
             border: 2px solid transparent;
             text-align: left;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         
-        .kandidat-label:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
+        .kandidat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
         }
         
-        .kandidat-option:checked + .kandidat-label {
-            background: rgba(248, 249, 250, 0.1);
+        .kandidat-option:checked + .kandidat-card {
             border-color: var(--accent);
-            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.2);
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
+            background: rgba(248, 249, 250, 0.1);
         }
         
-        .kandidat-option:checked + .kandidat-label::before {
+        .kandidat-option:checked + .kandidat-card::after {
             content: '\f00c';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             position: absolute;
             right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent);
-            font-size: 1.2rem;
-        }
-        
-        .custom-radio {
-            width: 22px;
-            height: 22px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            margin-right: 15px;
-            position: relative;
-            flex-shrink: 0;
-        }
-        
-        .kandidat-option:checked + .kandidat-label .custom-radio {
-            border-color: var(--accent);
-            background: rgba(247, 37, 133, 0.2);
-        }
-        
-        .kandidat-option:checked + .kandidat-label .custom-radio::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
+            top: 15px;
+            width: 30px;
+            height: 30px;
             background: var(--accent);
+            color: white;
             border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .kandidat-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+        }
+        
+        .kandidat-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .kandidat-name {
-            font-weight: 500;
-            font-size: 1.1rem;
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .kandidat-detail {
+            margin-top: 15px;
+        }
+        
+        .detail-section {
+            margin-bottom: 15px;
+        }
+        
+        .detail-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .detail-title i {
+            transition: transform 0.3s ease;
+        }
+        
+        .detail-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 8px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .detail-checkbox {
+            display: none;
+        }
+        
+        .detail-checkbox:checked ~ .detail-content {
+            max-height: 500px;
+            padding: 10px;
+        }
+        
+        .detail-checkbox:checked ~ .detail-title i {
+            transform: rotate(180deg);
         }
         
         .btn-submit {
@@ -215,20 +265,27 @@ $result = $conn->query("SELECT * FROM kandidat");
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            font-size: 1.1rem;
             background: linear-gradient(45deg, var(--accent), #f72585d0);
             color: white;
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transform: translateY(0);
-            margin-top: 10px;
+            margin-top: 20px;
         }
         
         .btn-submit:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
             background: linear-gradient(45deg, #f72585, #f72585e6);
+        }
+        
+        .btn-submit:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .btn-submit i {
@@ -274,6 +331,14 @@ $result = $conn->query("SELECT * FROM kandidat");
             }
         }
         
+        .no-candidates {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
@@ -281,11 +346,15 @@ $result = $conn->query("SELECT * FROM kandidat");
             }
             
             h2 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
-            .kandidat-label {
-                padding: 15px;
+            .kandidat-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-description {
+                font-size: 1rem;
             }
         }
     </style>
@@ -296,24 +365,66 @@ $result = $conn->query("SELECT * FROM kandidat");
     <div class="container">
         <h2>Pemilihan Ketua Kelas</h2>
         <p class="form-description">
-            Pilih salah satu kandidat di bawah ini dengan bijak.<br>
+            Pilih salah satu kandidat di bawah ini dengan bijak. Klik pada kartu kandidat untuk memilih, 
+            dan perluas bagian visi & misi untuk mengetahui lebih detail program mereka.<br>
             Suara Anda akan menentukan masa depan kelas kita!
         </p>
         
-        <form action="proses_vote.php" method="POST">
-            <div class="kandidat-container">
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <input type="radio" name="kandidat" value="<?= $row['id'] ?>" id="kandidat<?= $row['id'] ?>" class="kandidat-option" required>
-                    <label for="kandidat<?= $row['id'] ?>" class="kandidat-label">
-                        <span class="custom-radio"></span>
-                        <span class="kandidat-name"><?= htmlspecialchars($row['nama']) ?></span>
-                    </label>
-                <?php endwhile; ?>
+        <form action="proses_vote.php" method="POST" id="voteForm">
+            <div class="kandidat-grid">
+                <?php if ($result->num_rows > 0): ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <input type="radio" name="kandidat" value="<?= $row['id'] ?>" id="kandidat<?= $row['id'] ?>" class="kandidat-option" required>
+                        <label for="kandidat<?= $row['id'] ?>" class="kandidat-card">
+                            <?php if (!empty($row['foto'])): ?>
+                                <img src="uploads/<?= htmlspecialchars($row['foto']) ?>" alt="Foto <?= htmlspecialchars($row['nama']) ?>" class="kandidat-image">
+                            <?php else: ?>
+                                <img src="https://via.placeholder.com/350x200/3a0ca3/ffffff?text=<?= urlencode($row['nama']) ?>" alt="Foto <?= htmlspecialchars($row['nama']) ?>" class="kandidat-image">
+                            <?php endif; ?>
+                            
+                            <div class="kandidat-info">
+                                <div class="kandidat-name"><?= htmlspecialchars($row['nama']) ?></div>
+                                
+                                <div class="kandidat-detail">
+                                    <?php if (!empty($row['visi'])): ?>
+                                    <div class="detail-section">
+                                        <input type="checkbox" class="detail-checkbox" id="visi<?= $row['id'] ?>">
+                                        <label for="visi<?= $row['id'] ?>" class="detail-title">
+                                            <span>Visi</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </label>
+                                        <div class="detail-content"><?= nl2br(htmlspecialchars($row['visi'])) ?></div>
+                                    </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if (!empty($row['misi'])): ?>
+                                    <div class="detail-section">
+                                        <input type="checkbox" class="detail-checkbox" id="misi<?= $row['id'] ?>">
+                                        <label for="misi<?= $row['id'] ?>" class="detail-title">
+                                            <span>Misi</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </label>
+                                        <div class="detail-content"><?= nl2br(htmlspecialchars($row['misi'])) ?></div>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </label>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <div class="no-candidates">
+                        <i class="fas fa-users fa-3x" style="margin-bottom: 20px;"></i>
+                        <h3>Belum Ada Kandidat</h3>
+                        <p>Silakan hubungi administrator untuk menambahkan kandidat.</p>
+                    </div>
+                <?php endif; ?>
             </div>
             
-            <button type="submit" class="btn-submit">
+            <?php if ($result->num_rows > 0): ?>
+            <button type="submit" class="btn-submit" id="submitButton">
                 <i class="fas fa-paper-plane"></i> Kirim Vote Saya
             </button>
+            <?php endif; ?>
         </form>
     </div>
 
@@ -345,6 +456,26 @@ $result = $conn->query("SELECT * FROM kandidat");
                 
                 particlesContainer.appendChild(particle);
             }
+            
+            // Prevent detail checkboxes from affecting the card selection
+            const detailCheckboxes = document.querySelectorAll('.detail-checkbox');
+            detailCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+            
+            // Handle card selection
+            const kandidatOptions = document.querySelectorAll('.kandidat-option');
+            kandidatOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    // Enable submit button when a candidate is selected
+                    document.getElementById('submitButton').disabled = false;
+                });
+            });
+            
+            // Initially disable submit button
+            document.getElementById('submitButton').disabled = true;
         });
     </script>
 </body>

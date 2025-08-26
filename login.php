@@ -6,6 +6,8 @@ require 'koneksi.php';
 define('RECAPTCHA_SITE_KEY', '6Lc4x6YrAAAAAGe2SeeOGneFKPpGXKItaow9XEXk');
 define('RECAPTCHA_SECRET_KEY', '6Lc4x6YrAAAAAMA7gp_a-_if8PP1cEsFWDr_iOcC');
 
+$error = '';
+
 if(isset($_POST['login'])){
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -19,24 +21,45 @@ if(isset($_POST['login'])){
         $error = "Verifikasi reCAPTCHA gagal. Silakan centang 'I'm not a robot'.";
     } else {
         // Ambil data user berdasarkan username
-        $stmt = $conn->prepare("SELECT id, username, password, is_verified FROM users WHERE username=?");
+        $stmt = $conn->prepare("SELECT id, username, password, is_verified, is_admin FROM users WHERE username=?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
-        $stmt->bind_result($id, $username_db, $password_db, $is_verified);
+        $stmt->bind_result($id, $username_db, $password_db, $is_verified, $is_admin);
         $stmt->fetch();
 
         if($stmt->num_rows == 0){
             $error = "Username belum terdaftar.";
         } else {
+            // Verifikasi password
             if(password_verify($password, $password_db)){
                 if($is_verified == 0){
                     $error = "Akun belum terverifikasi. Silakan cek email untuk OTP.";
                 } else {
                     $_SESSION['id'] = $id;
                     $_SESSION['username'] = $username_db;
-                    header("Location: index.php"); // redirect ke index.php setelah login
-                    exit;
+                    $_SESSION['is_admin'] = $is_admin;
+                    
+                    // Cek apakah user adalah admin
+                    if ($is_admin) {
+                        header("Location: admin_dashboard.php");
+                        exit();
+                    }
+                    
+                    // Cek apakah user sudah voting
+                    $check_vote = $conn->prepare("SELECT has_voted FROM users WHERE id=?");
+                    $check_vote->bind_param("i", $id);
+                    $check_vote->execute();
+                    $check_vote->bind_result($has_voted);
+                    $check_vote->fetch();
+                    $check_vote->close();
+                    
+                    if ($has_voted) {
+                        header("Location: sudah_vote.php");
+                    } else {
+                        header("Location: vote.php");
+                    }
+                    exit();
                 }
             } else {
                 $error = "Password salah.";
@@ -344,7 +367,7 @@ if(isset($_POST['login'])){
         </div>
         <h1>Masuk ke Sistem</h1>
         
-        <?php if(isset($error)) { echo "<div class='error'><i class='fas fa-exclamation-circle'></i> $error</div>"; } ?>
+        <?php if(isset($error) && !empty($error)) { echo "<div class='error'><i class='fas fa-exclamation-circle'></i> $error</div>"; } ?>
         
         <form method="post">
             <div class="form-group">

@@ -1,44 +1,13 @@
 <?php
 session_start();
-require 'koneksi.php';
-
-// Periksa apakah user sudah login
-if (!isset($_SESSION['id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-// Periksa apakah user adalah admin
-if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1) {
-    header("Location: admin_dashboard.php");
-    exit();
-}
-
-// Kode selanjutnya tetap sama...
-
-// Periksa apakah user sudah memilih
-$user_id = $_SESSION['id'];
-$check_vote = $conn->prepare("SELECT has_voted FROM users WHERE id = ?");
-$check_vote->bind_param("i", $user_id);
-$check_vote->execute();
-$check_vote->bind_result($has_voted);
-$check_vote->fetch();
-$check_vote->close();
-
-if ($has_voted) {
-    header("Location: sudah_vote.php");
-    exit();
-}
-
-$result = $conn->query("SELECT * FROM kandidat");
+// Halaman untuk user yang sudah voting
 ?>
-<!-- HTML tetap sama -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voting Ketua Kelas | Digital Voting System</title>
+    <title>Sudah Voting | Digital Voting System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -48,6 +17,7 @@ $result = $conn->query("SELECT * FROM kandidat");
             --light: #f8f9fa;
             --dark: #212529;
             --success: #4cc9f0;
+            --warning: #ffbe0b;
         }
         
         * {
@@ -96,9 +66,22 @@ $result = $conn->query("SELECT * FROM kandidat");
             z-index: -1;
         }
         
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 25px;
+        .info-icon {
+            font-size: 5rem;
+            color: var(--warning);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
             font-weight: 700;
             background: linear-gradient(to right, #fff, #f8f9fa);
             -webkit-background-clip: text;
@@ -107,106 +90,34 @@ $result = $conn->query("SELECT * FROM kandidat");
             display: inline-block;
         }
         
-        h2::after {
+        h1::after {
             content: '';
             position: absolute;
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
+            width: 80px;
             height: 4px;
-            background: var(--accent);
+            background: var(--warning);
             border-radius: 2px;
         }
         
-        .form-description {
-            font-size: 1rem;
+        .info-message {
+            font-size: 1.1rem;
             margin-bottom: 30px;
             opacity: 0.9;
             line-height: 1.6;
         }
         
-        .kandidat-container {
+        .btn-container {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 30px 0;
         }
         
-        .kandidat-option {
-            display: none;
-        }
-        
-        .kandidat-label {
-            display: flex;
-            align-items: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-            text-align: left;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .kandidat-label:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
-        }
-        
-        .kandidat-option:checked + .kandidat-label {
-            background: rgba(248, 249, 250, 0.1);
-            border-color: var(--accent);
-            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.2);
-        }
-        
-        .kandidat-option:checked + .kandidat-label::before {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent);
-            font-size: 1.2rem;
-        }
-        
-        .custom-radio {
-            width: 22px;
-            height: 22px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            margin-right: 15px;
-            position: relative;
-            flex-shrink: 0;
-        }
-        
-        .kandidat-option:checked + .kandidat-label .custom-radio {
-            border-color: var(--accent);
-            background: rgba(247, 37, 133, 0.2);
-        }
-        
-        .kandidat-option:checked + .kandidat-label .custom-radio::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--accent);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
-        .kandidat-name {
-            font-weight: 500;
-            font-size: 1.1rem;
-        }
-        
-        .btn-submit {
+        .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -216,23 +127,43 @@ $result = $conn->query("SELECT * FROM kandidat");
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1rem;
-            background: linear-gradient(45deg, var(--accent), #f72585d0);
-            color: white;
-            border: none;
-            cursor: pointer;
+            min-width: 200px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transform: translateY(0);
-            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
         }
         
-        .btn-submit:hover {
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent), #f72585d0);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-primary:hover {
             background: linear-gradient(45deg, #f72585, #f72585e6);
         }
         
-        .btn-submit i {
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn i {
             margin-right: 10px;
+            font-size: 1.2rem;
         }
         
         .particles {
@@ -280,12 +211,22 @@ $result = $conn->query("SELECT * FROM kandidat");
                 border-radius: 15px;
             }
             
-            h2 {
+            h1 {
                 font-size: 1.8rem;
             }
             
-            .kandidat-label {
-                padding: 15px;
+            .info-icon {
+                font-size: 4rem;
+            }
+            
+            .btn {
+                min-width: 160px;
+                padding: 12px 20px;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -294,27 +235,23 @@ $result = $conn->query("SELECT * FROM kandidat");
     <div class="particles" id="particles"></div>
     
     <div class="container">
-        <h2>Pemilihan Ketua Kelas</h2>
-        <p class="form-description">
-            Pilih salah satu kandidat di bawah ini dengan bijak.<br>
-            Suara Anda akan menentukan masa depan kelas kita!
+        <div class="info-icon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <h1>Anda Sudah Voting</h1>
+        <p class="info-message">
+            Anda sudah melakukan voting sebelumnya.<br>
+            Setiap akun hanya dapat memilih satu kali.
         </p>
         
-        <form action="proses_vote.php" method="POST">
-            <div class="kandidat-container">
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <input type="radio" name="kandidat" value="<?= $row['id'] ?>" id="kandidat<?= $row['id'] ?>" class="kandidat-option" required>
-                    <label for="kandidat<?= $row['id'] ?>" class="kandidat-label">
-                        <span class="custom-radio"></span>
-                        <span class="kandidat-name"><?= htmlspecialchars($row['nama']) ?></span>
-                    </label>
-                <?php endwhile; ?>
-            </div>
-            
-            <button type="submit" class="btn-submit">
-                <i class="fas fa-paper-plane"></i> Kirim Vote Saya
-            </button>
-        </form>
+        <div class="btn-container">
+            <a href="hasil.php" class="btn btn-primary">
+                <i class="fas fa-chart-bar"></i> Lihat Hasil Voting
+            </a>
+            <a href="logout.php" class="btn btn-secondary">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
     </div>
 
     <script>

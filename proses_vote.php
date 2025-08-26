@@ -1,9 +1,56 @@
 <?php
+session_start();
+require 'koneksi.php';
+
+// Periksa apakah user sudah login
+if (!isset($_SESSION['id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['id'];
 $conn = new mysqli("localhost", "root", "", "voting_ketua");
+
+// Periksa apakah user sudah memilih sebelumnya
+$check_vote = $conn->prepare("SELECT has_voted FROM users WHERE id = ?");
+$check_vote->bind_param("i", $user_id);
+$check_vote->execute();
+$check_vote->bind_result($has_voted);
+$check_vote->fetch();
+$check_vote->close();
+
+if ($has_voted) {
+    die("Anda sudah melakukan voting sebelumnya. Hanya boleh memilih sekali.");
+}
 
 if (isset($_POST['kandidat'])) {
     $id_kandidat = $_POST['kandidat'];
-    $conn->query("INSERT INTO hasil_vote (kandidat_id) VALUES ($id_kandidat)");
+    
+    // Mulai transaction
+    $conn->begin_transaction();
+    
+    try {
+        // Simpan vote
+        $stmt = $conn->prepare("INSERT INTO hasil_vote (kandidat_id, user_id) VALUES (?, ?)");
+        $stmt->bind_param("ii", $id_kandidat, $user_id);
+        $stmt->execute();
+        
+        // Tandai user sudah memilih
+        $update_user = $conn->prepare("UPDATE users SET has_voted = 1 WHERE id = ?");
+        $update_user->bind_param("i", $user_id);
+        $update_user->execute();
+        
+        // Commit transaction
+        $conn->commit();
+        
+        // Redirect ke halaman terima kasih
+        header("Location: terima_kasih.php");
+        exit();
+    } catch (Exception $e) {
+        // Rollback transaction jika ada error
+        $conn->rollback();
+        die("Terjadi kesalahan: " . $e->getMessage());
+    }
 } else {
     die("Anda belum memilih kandidat.");
 }

@@ -1,7 +1,7 @@
 ## STRUKTUR PROYEK
 
 voting_ketua/
-├── config.php          # Konfigurasi dasar (kemungkinan database)
+├── config.php          # Konfigurasi dasar (database)
 ├── hasil.php           # Halaman untuk menampilkan hasil voting
 ├── index.php           # Halaman utama (landing page / login form)
 ├── koneksi.php         # File koneksi database MySQL
@@ -22,7 +22,7 @@ voting_ketua/
 
 ## 📌 Deskripsi Proyek
 **Voting Ketua** adalah aplikasi web sederhana berbasis **PHP & MySQL** yang digunakan untuk melakukan proses pemilihan ketua secara online.  
-Proyek ini dirancang agar mudah digunakan di lingkungan sekolah, organisasi, atau komunitas yang membutuhkan sistem voting yang cepat, transparan, dan terkomputerisasi.  
+Project ini dirancang agar mudah digunakan di lingkungan sekolah, organisasi, atau komunitas yang membutuhkan sistem voting yang cepat, transparan, dan terkomputerisasi.  
 
 Aplikasi ini dilengkapi dengan sistem **registrasi akun dengan verifikasi email**, **autentikasi login**, serta **perhitungan hasil voting otomatis** yang dapat diakses langsung oleh pengguna.  
 
@@ -37,7 +37,7 @@ Aplikasi ini dilengkapi dengan sistem **registrasi akun dengan verifikasi email*
 2. **Voting Online**
    - Pemilih hanya bisa memilih satu kandidat.
    - Voting otomatis tercatat ke database.
-   - Mencegah voting ganda (satu akun hanya bisa memilih sekali).
+   - Mencegah voting ganda (satu akun hanya bisa memilih sekali). 
 
 3. **Hasil Voting**
    - Hasil perhitungan voting ditampilkan secara real-time.
@@ -52,17 +52,15 @@ Aplikasi ini dilengkapi dengan sistem **registrasi akun dengan verifikasi email*
    - **Database**: MySQL/MariaDB  
    - **Library**: PHPMailer (untuk OTP/Email)  
 
+6. **PR Project**
+   - project ini masih dalam tahap perkembangan jadi untuk voting 1 kali setiap akun masih belum bisa (done)
+   - dan juga project ini hanya bisa di akses hanya jarak 500m, jika lebih 500 meter hanya bisa melihat hasil voting
 ---
 
 ## ⚙️ Instalasi
-1. Clone repository atau ekstrak file ZIP ke folder web server (misalnya `htdocs` di XAMPP atau `var/www/html` di Linux).
+1. Clone repository atau ekstrak file ZIP ke folder web server (misalnya di LARAGON laragon/www).
 
-2. Import database MySQL:
-   ```bash
-   mysql -u root -p nama_database < database.sql
-   ```
-
-3. Edit file **koneksi.php** dan sesuaikan dengan konfigurasi database Anda:
+2. Edit file **koneksi.php** dan sesuaikan dengan konfigurasi database Anda:
    ```php
    $host = "localhost";
    $user = "root";
@@ -72,7 +70,7 @@ Aplikasi ini dilengkapi dengan sistem **registrasi akun dengan verifikasi email*
 
 4. Konfigurasi PHPMailer di file **mailer.php** agar bisa mengirim OTP ke email.
 
-5. Akses aplikasi melalui browser:
+4. Akses aplikasi melalui browser:
    ```
    http://localhost/voting_ketua
    ```

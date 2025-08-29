@@ -127,20 +127,17 @@ if (isset($_GET['delete'])) {
     <title>Kelola Kandidat | Digital Voting System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS styles remain the same as in your original file */
         :root {
-            --primary: #4361ee;
-            --primary-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
-            --secondary: #3f37c9;
-            --accent: #f72585;
-            --accent-gradient: linear-gradient(135deg, #f72585, #b5179e);
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
-            --warning: #ffbe0b;
-            --danger: #ff6b6b;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-border: rgba(255, 255, 255, 0.15);
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #16a085;
+            --light: #f9f9f9;
+            --dark: #222;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --gray-light: #ecf0f1;
+            --gray: #bdc3c7;
         }
         
         * {
@@ -151,9 +148,9 @@ if (isset($_GET['delete'])) {
         
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #f9f9f9, #ecf0f1);
             min-height: 100vh;
-            color: var(--light);
+            color: var(--dark);
             padding: 20px;
             background-attachment: fixed;
         }
@@ -162,14 +159,10 @@ if (isset($_GET['delete'])) {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.2),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
         }
         
         .header {
@@ -177,79 +170,103 @@ if (isset($_GET['delete'])) {
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(to right, #fff, #f8f9fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 12px 20px;
+            border-radius: 8px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1rem;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border: none;
             cursor: pointer;
+            gap: 8px;
         }
         
         .btn-primary {
-            background: var(--accent-gradient);
+            background: var(--accent);
             color: white;
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--secondary);
             color: white;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary:hover {
+            background: #1abc9c;
+        }
+        
+        .btn-secondary:hover {
+            background: #2c3e50;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            background: white;
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
         th, td {
             padding: 15px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--gray-light);
         }
         
         th {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--accent);
+            color: white;
             font-weight: 600;
         }
         
         tr:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(22, 160, 133, 0.05);
         }
         
         .action-btn {
-            padding: 8px 12px;
+            padding: 6px 12px;
             border-radius: 6px;
             text-decoration: none;
             margin-right: 5px;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             font-size: 0.9rem;
+            gap: 5px;
+            transition: all 0.3s ease;
         }
         
         .btn-delete {
@@ -257,11 +274,17 @@ if (isset($_GET['delete'])) {
             color: white;
         }
         
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
         .kandidat-foto {
             width: 80px;
             height: 80px;
             object-fit: cover;
             border-radius: 8px;
+            border: 2px solid var(--gray-light);
         }
         
         .back-btn {
@@ -269,30 +292,38 @@ if (isset($_GET['delete'])) {
         }
         
         .form-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
+            background: var(--gray-light);
+            border-radius: 8px;
+            padding: 25px;
             margin-bottom: 30px;
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary);
         }
         
-        input, textarea {
+        input, textarea, select {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            border: 1px solid var(--gray);
+            background: white;
+            color: var(--dark);
             font-family: 'Poppins', Arial, sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(22, 160, 133, 0.1);
         }
         
         textarea {
@@ -301,42 +332,94 @@ if (isset($_GET['delete'])) {
         }
         
         .submit-btn {
-            background: var(--success);
+            background: var(--accent);
             color: white;
             padding: 12px 24px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #1abc9c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
         
         .alert {
-            padding: 12px 20px;
+            padding: 15px 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
+            gap: 10px;
+            border-left: 3px solid;
         }
         
         .alert-success {
-            background: rgba(76, 201, 240, 0.2);
-            border: 1px solid var(--success);
+            background: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
         }
         
         .alert-error {
-            background: rgba(255, 107, 107, 0.2);
-            border: 1px solid var(--danger);
+            background: rgba(231, 76, 60, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
         }
         
         .empty-state {
             text-align: center;
             padding: 40px 0;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--secondary);
         }
         
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 15px;
+            color: var(--gray);
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .kandidat-foto {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .action-btn {
+                margin-right: 0;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -351,19 +434,19 @@ if (isset($_GET['delete'])) {
         <!-- Notifikasi -->
         <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
             <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> &nbsp; Kandidat berhasil ditambahkan!
+                <i class="fas fa-check-circle"></i> Kandidat berhasil ditambahkan!
             </div>
         <?php endif; ?>
         
         <?php if (isset($_GET['deleted']) && $_GET['deleted'] == 1): ?>
             <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> &nbsp; Kandidat berhasil dihapus!
+                <i class="fas fa-check-circle"></i> Kandidat berhasil dihapus!
             </div>
         <?php endif; ?>
         
         <?php if (isset($error_message)): ?>
             <div class="alert alert-error">
-                <i class="fas fa-exclamation-circle"></i> &nbsp; <?php echo $error_message; ?>
+                <i class="fas fa-exclamation-circle"></i> <?php echo $error_message; ?>
             </div>
         <?php endif; ?>
         
@@ -375,11 +458,11 @@ if (isset($_GET['delete'])) {
         </div>
         
         <div class="form-container">
-            <h2>Tambah Kandidat Baru</h2>
+            <h2><i class="fas fa-plus-circle"></i> Tambah Kandidat Baru</h2>
             <form method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nama">Nama Kandidat</label>
-                    <input type="text" id="nama" name="nama" required>
+                    <input type="text" id="nama" name="nama" required placeholder="Masukkan nama kandidat">
                 </div>
                 
                 <?php if ($columns_exist['foto']): ?>
@@ -392,14 +475,14 @@ if (isset($_GET['delete'])) {
                 <?php if ($columns_exist['visi']): ?>
                 <div class="form-group">
                     <label for="visi">Visi</label>
-                    <textarea id="visi" name="visi" required></textarea>
+                    <textarea id="visi" name="visi" required placeholder="Masukkan visi kandidat"></textarea>
                 </div>
                 <?php endif; ?>
                 
                 <?php if ($columns_exist['misi']): ?>
                 <div class="form-group">
                     <label for="misi">Misi</label>
-                    <textarea id="misi" name="misi" required></textarea>
+                    <textarea id="misi" name="misi" required placeholder="Masukkan misi kandidat"></textarea>
                 </div>
                 <?php endif; ?>
                 
@@ -434,8 +517,8 @@ if (isset($_GET['delete'])) {
                             <?php if (!empty($row['foto'])): ?>
                                 <img src="uploads/<?php echo htmlspecialchars($row['foto']); ?>" alt="<?php echo htmlspecialchars($row['nama']); ?>" class="kandidat-foto">
                             <?php else: ?>
-                                <div style="width: 80px; height: 80px; background: #ccc; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                                    <i class="fas fa-user" style="font-size: 2rem; color: #666;"></i>
+                                <div style="width: 80px; height: 80px; background: var(--gray-light); display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                                    <i class="fas fa-user" style="font-size: 2rem; color: var(--gray);"></i>
                                 </div>
                             <?php endif; ?>
                         </td>

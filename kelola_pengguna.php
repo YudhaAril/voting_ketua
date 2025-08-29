@@ -80,20 +80,17 @@ if (isset($_GET['delete'])) {
     <title>Kelola Pengguna | Digital Voting System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Tambahkan style dari admin_dashboard.php atau buat style khusus */
         :root {
-            --primary: #4361ee;
-            --primary-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
-            --secondary: #3f37c9;
-            --accent: #f72585;
-            --accent-gradient: linear-gradient(135deg, #f72585, #b5179e);
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
-            --warning: #ffbe0b;
-            --danger: #ff6b6b;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-border: rgba(255, 255, 255, 0.15);
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #16a085;
+            --light: #f9f9f9;
+            --dark: #222;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --gray-light: #ecf0f1;
+            --gray: #bdc3c7;
         }
         
         * {
@@ -104,9 +101,9 @@ if (isset($_GET['delete'])) {
         
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #f9f9f9, #ecf0f1);
             min-height: 100vh;
-            color: var(--light);
+            color: var(--dark);
             padding: 20px;
             background-attachment: fixed;
         }
@@ -115,14 +112,10 @@ if (isset($_GET['delete'])) {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.2),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
         }
         
         .header {
@@ -130,92 +123,111 @@ if (isset($_GET['delete'])) {
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(to right, #fff, #f8f9fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 12px 20px;
+            border-radius: 8px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1rem;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border: none;
             cursor: pointer;
+            gap: 8px;
         }
         
         .btn-primary {
-            background: var(--accent-gradient);
+            background: var(--accent);
             color: white;
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--secondary);
             color: white;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .btn-warning {
-            background: linear-gradient(135deg, var(--warning), #ff9e0b);
-            color: var(--dark);
+            background: var(--warning);
+            color: white;
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary:hover {
+            background: #1abc9c;
+        }
+        
+        .btn-secondary:hover {
+            background: #2c3e50;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            background: white;
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
         th, td {
             padding: 15px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--gray-light);
         }
         
         th {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--accent);
+            color: white;
             font-weight: 600;
         }
         
         tr:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(22, 160, 133, 0.05);
         }
         
         .admin-row {
-            background: rgba(76, 201, 240, 0.1);
+            background: rgba(22, 160, 133, 0.1);
         }
         
         .admin-row:hover {
-            background: rgba(76, 201, 240, 0.15);
+            background: rgba(22, 160, 133, 0.15);
         }
         
         .action-btn {
-            padding: 8px 12px;
+            padding: 6px 12px;
             border-radius: 6px;
             text-decoration: none;
             margin-right: 5px;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             font-size: 0.9rem;
+            gap: 5px;
+            transition: all 0.3s ease;
         }
         
         .btn-verify {
@@ -225,7 +237,7 @@ if (isset($_GET['delete'])) {
         
         .btn-reset {
             background: var(--warning);
-            color: var(--dark);
+            color: white;
         }
         
         .btn-delete {
@@ -234,9 +246,14 @@ if (isset($_GET['delete'])) {
         }
         
         .btn-delete-disabled {
-            background: rgba(255, 107, 107, 0.5);
-            color: rgba(255, 255, 255, 0.7);
+            background: var(--gray);
+            color: white;
             cursor: not-allowed;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
         
         .status-badge {
@@ -244,25 +261,26 @@ if (isset($_GET['delete'])) {
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
+            display: inline-block;
         }
         
         .verified {
-            background: rgba(76, 201, 240, 0.2);
+            background: rgba(39, 174, 96, 0.2);
             color: var(--success);
         }
         
         .not-verified {
-            background: rgba(255, 190, 11, 0.2);
+            background: rgba(243, 156, 18, 0.2);
             color: var(--warning);
         }
         
         .voted {
-            background: rgba(76, 201, 240, 0.2);
+            background: rgba(39, 174, 96, 0.2);
             color: var(--success);
         }
         
         .not-voted {
-            background: rgba(255, 107, 107, 0.2);
+            background: rgba(231, 76, 60, 0.2);
             color: var(--danger);
         }
         
@@ -271,38 +289,90 @@ if (isset($_GET['delete'])) {
         }
         
         .reset-all-container {
-            margin: 20px 0;
-            text-align: center;
+            margin: 25px 0;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            background: var(--gray-light);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .reset-all-container h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .reset-all-container p {
+            margin-bottom: 15px;
+            color: var(--secondary);
         }
         
         .error-message {
-            background: rgba(255, 107, 107, 0.2);
+            background: rgba(231, 76, 60, 0.1);
             color: var(--danger);
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
-            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-left: 3px solid var(--danger);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .success-message {
-            background: rgba(76, 201, 240, 0.2);
+            background: rgba(39, 174, 96, 0.1);
             color: var(--success);
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
-            border: 1px solid rgba(76, 201, 240, 0.3);
+            border-left: 3px solid var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .section-title {
             margin: 30px 0 15px 0;
             padding-bottom: 10px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            font-size: 1.5rem;
+            border-bottom: 2px solid var(--gray-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .action-btn {
+                margin-right: 0;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -438,21 +508,23 @@ if (isset($_GET['delete'])) {
                         </span>
                     </td>
                     <td>
-                        <?php if (!$user['is_verified']): ?>
-                            <a href="kelola_pengguna.php?verify=<?php echo $user['id']; ?>" class="action-btn btn-verify">
-                                <i class="fas fa-check"></i> Verifikasi
+                        <div class="action-buttons">
+                            <?php if (!$user['is_verified']): ?>
+                                <a href="kelola_pengguna.php?verify=<?php echo $user['id']; ?>" class="action-btn btn-verify">
+                                    <i class="fas fa-check"></i> Verifikasi
+                                </a>
+                            <?php endif; ?>
+                            
+                            <?php if ($user['has_voted']): ?>
+                                <a href="kelola_pengguna.php?reset_vote=<?php echo $user['id']; ?>" class="action-btn btn-reset">
+                                    <i class="fas fa-undo"></i> Reset Vote
+                                </a>
+                            <?php endif; ?>
+                            
+                            <a href="kelola_pengguna.php?delete=<?php echo $user['id']; ?>" class="action-btn btn-delete" onclick="return confirm('Yakin ingin menghapus pengguna ini?')">
+                                <i class="fas fa-trash"></i> Hapus
                             </a>
-                        <?php endif; ?>
-                        
-                        <?php if ($user['has_voted']): ?>
-                            <a href="kelola_pengguna.php?reset_vote=<?php echo $user['id']; ?>" class="action-btn btn-reset">
-                                <i class="fas fa-undo"></i> Reset Vote
-                            </a>
-                        <?php endif; ?>
-                        
-                        <a href="kelola_pengguna.php?delete=<?php echo $user['id']; ?>" class="action-btn btn-delete" onclick="return confirm('Yakin ingin menghapus pengguna ini?')">
-                            <i class="fas fa-trash"></i> Hapus
-                        </a>
+                        </div>
                     </td>
                 </tr>
                 <?php endwhile; ?>

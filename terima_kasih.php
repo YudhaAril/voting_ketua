@@ -11,12 +11,14 @@ session_start();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #16a085;
+            --light: #f9f9f9;
+            --dark: #222;
+            --success: #27ae60;
+            --gray-light: #ecf0f1;
+            --gray: #bdc3c7;
         }
         
         * {
@@ -27,13 +29,13 @@ session_start();
         
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            background: linear-gradient(135deg, #f9f9f9, #ecf0f1);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--light);
+            color: var(--dark);
             padding: 20px;
             background-attachment: fixed;
         }
@@ -41,33 +43,19 @@ session_start();
         .container {
             width: 100%;
             max-width: 600px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
+            background: #fff;
+            border-radius: 12px;
             padding: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             text-align: center;
             animation: fadeIn 0.8s ease-out;
             position: relative;
             overflow: hidden;
         }
         
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            z-index: -1;
-        }
-        
         .success-icon {
             font-size: 5rem;
-            color: var(--success);
+            color: var(--accent);
             margin-bottom: 20px;
             animation: bounce 1s ease;
         }
@@ -81,30 +69,28 @@ session_start();
         h1 {
             font-size: 2.2rem;
             margin-bottom: 15px;
-            font-weight: 700;
-            background: linear-gradient(to right, #fff, #f8f9fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            color: var(--primary);
             position: relative;
-            display: inline-block;
+            padding-bottom: 15px;
         }
         
         h1::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 80px;
             height: 4px;
-            background: var(--success);
+            background: var(--accent);
             border-radius: 2px;
         }
         
         .thank-you-message {
             font-size: 1.1rem;
             margin-bottom: 30px;
-            opacity: 0.9;
+            color: var(--secondary);
             line-height: 1.6;
         }
         
@@ -121,76 +107,44 @@ session_start();
             align-items: center;
             justify-content: center;
             padding: 15px 30px;
-            border-radius: 12px;
+            border-radius: 8px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1rem;
-            min-width: 200px;
+            min-width: 180px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transform: translateY(0);
-            position: relative;
-            overflow: hidden;
             border: none;
             cursor: pointer;
         }
         
         .btn-primary {
-            background: linear-gradient(45deg, var(--accent), #f72585d0);
+            background: var(--accent);
             color: white;
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--gray-light);
+            color: var(--secondary);
         }
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         
         .btn-primary:hover {
-            background: linear-gradient(45deg, #f72585, #f72585e6);
+            background: #1abc9c;
         }
         
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #dde4e6;
         }
         
         .btn i {
             margin-right: 10px;
             font-size: 1.2rem;
-        }
-        
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: float linear infinite;
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
         }
         
         @keyframes fadeIn {
@@ -207,7 +161,7 @@ session_start();
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
-                border-radius: 15px;
+                border-radius: 10px;
             }
             
             h1 {
@@ -231,8 +185,6 @@ session_start();
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
     <div class="container">
         <div class="success-icon">
             <i class="fas fa-check-circle"></i>
@@ -252,36 +204,5 @@ session_start();
             </a>
         </div>
     </div>
-
-    <script>
-        // Create floating particles
-        document.addEventListener('DOMContentLoaded', function() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size between 2px and 6px
-                const size = Math.random() * 4 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation duration between 10s and 20s
-                const duration = Math.random() * 10 + 10;
-                particle.style.animationDuration = `${duration}s`;
-                
-                // Random delay
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        });
-    </script>
 </body>
 </html>

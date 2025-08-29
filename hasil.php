@@ -10,7 +10,7 @@ $result = $conn->query($sql);
 
 $nama_kandidat = [];
 $jumlah_suara = [];
-$colors = ['#f72585', '#4361ee', '#4cc9f0', '#3a0ca3', '#7209b7', '#4895ef', '#560bad'];
+$colors = ['#16a085', '#2c3e50', '#34495e', '#1abc9c', '#27ae60', '#2980b9', '#8e44ad'];
 
 while ($row = $result->fetch_assoc()) {
     $nama_kandidat[] = $row['nama'];
@@ -27,12 +27,14 @@ while ($row = $result->fetch_assoc()) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #16a085;
+            --light: #f9f9f9;
+            --dark: #222;
+            --success: #27ae60;
+            --gray-light: #ecf0f1;
+            --gray: #bdc3c7;
         }
         
         * {
@@ -43,12 +45,13 @@ while ($row = $result->fetch_assoc()) {
         
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            background: linear-gradient(135deg, #f9f9f9, #ecf0f1);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--light);
+            justify-content: center;
+            color: var(--dark);
             padding: 20px;
             background-attachment: fixed;
         }
@@ -56,13 +59,10 @@ while ($row = $result->fetch_assoc()) {
         .container {
             width: 100%;
             max-width: 1000px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
+            background: #fff;
+            border-radius: 12px;
             padding: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             text-align: center;
             animation: fadeIn 0.8s ease-out;
             position: relative;
@@ -70,44 +70,44 @@ while ($row = $result->fetch_assoc()) {
             margin-bottom: 30px;
         }
         
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            z-index: -1;
+        .logo {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--accent);
         }
         
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-            background: linear-gradient(to right, #fff, #f8f9fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: var(--primary);
             position: relative;
-            display: inline-block;
+            padding-bottom: 15px;
         }
         
         h1::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
+            width: 40px;
+            height: 3px;
             background: var(--accent);
             border-radius: 2px;
         }
         
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+        
         .description {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 30px;
-            opacity: 0.9;
+            color: var(--secondary);
             line-height: 1.6;
         }
         
@@ -122,35 +122,39 @@ while ($row = $result->fetch_assoc()) {
         .table-container, .chart-container {
             flex: 1;
             min-width: 300px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
+            background: var(--gray-light);
+            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
         }
         
         th, td {
             padding: 15px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--gray-light);
         }
         
         th {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--accent);
+            color: white;
             font-weight: 600;
         }
         
         tr:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(22, 160, 133, 0.05);
         }
         
         .winner {
-            background: rgba(76, 201, 240, 0.1);
+            background: rgba(22, 160, 133, 0.1);
             position: relative;
         }
         
@@ -181,79 +185,50 @@ while ($row = $result->fetch_assoc()) {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 15px 30px;
-            border-radius: 12px;
+            padding: 14px 30px;
+            border-radius: 8px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1rem;
-            min-width: 200px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-width: 180px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transform: translateY(0);
+            border: none;
+            cursor: pointer;
         }
         
         .btn-primary {
-            background: linear-gradient(45deg, var(--accent), #f72585d0);
+            background: var(--accent);
             color: white;
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--secondary);
             color: white;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
         
         .btn-primary:hover {
-            background: linear-gradient(45deg, #f72585, #f72585e6);
+            background: #1abc9c;
         }
         
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #2c3e50;
         }
         
         .btn i {
             margin-right: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: float linear infinite;
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
         }
         
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -264,10 +239,11 @@ while ($row = $result->fetch_assoc()) {
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
+                border-radius: 10px;
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 1.6rem;
             }
             
             .results-container {
@@ -282,10 +258,11 @@ while ($row = $result->fetch_assoc()) {
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
     <div class="container">
-        <h1><i class="fas fa-chart-pie"></i> Hasil Voting</h1>
+        <div class="logo">
+            <i class="fas fa-chart-pie"></i>
+        </div>
+        <h1>Hasil Voting</h1>
         <p class="description">
             Berikut adalah hasil pemilihan ketua kelas yang telah berlangsung.<br>
             Data ditampilkan dalam bentuk tabel dan diagram untuk memudahkan analisis.
@@ -333,35 +310,8 @@ while ($row = $result->fetch_assoc()) {
     </div>
 
     <script>
-        // Create floating particles
+        // Chart configuration
         document.addEventListener('DOMContentLoaded', function() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size between 2px and 6px
-                const size = Math.random() * 4 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation duration between 10s and 20s
-                const duration = Math.random() * 10 + 10;
-                particle.style.animationDuration = `${duration}s`;
-                
-                // Random delay
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-
-            // Chart configuration
             const ctx = document.getElementById('voteChart').getContext('2d');
             new Chart(ctx, {
                 type: 'pie',
@@ -371,9 +321,9 @@ while ($row = $result->fetch_assoc()) {
                         label: 'Jumlah Suara',
                         data: <?= json_encode($jumlah_suara) ?>,
                         backgroundColor: [
-                            '#f72585', '#4361ee', '#4cc9f0', '#3a0ca3', '#7209b7', '#4895ef', '#560bad'
+                            '#16a085', '#2c3e50', '#34495e', '#1abc9c', '#27ae60', '#2980b9', '#8e44ad'
                         ],
-                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                        borderColor: 'white',
                         borderWidth: 2
                     }]
                 },
@@ -383,7 +333,6 @@ while ($row = $result->fetch_assoc()) {
                         legend: {
                             position: 'bottom',
                             labels: {
-                                color: '#f8f9fa',
                                 font: {
                                     family: 'Poppins'
                                 }

@@ -40,14 +40,16 @@ $result = $conn->query("SELECT * FROM kandidat");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
-            --card-bg: rgba(255, 255, 255, 0.07);
-            --card-border: rgba(255, 255, 255, 0.1);
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #16a085;
+            --light: #f9f9f9;
+            --dark: #222;
+            --success: #27ae60;
+            --gray-light: #ecf0f1;
+            --gray: #bdc3c7;
+            --card-bg: #ffffff;
+            --card-border: #e0e0e0;
         }
         
         * {
@@ -58,13 +60,13 @@ $result = $conn->query("SELECT * FROM kandidat");
         
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            background: linear-gradient(135deg, #f9f9f9, #ecf0f1);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--light);
+            color: var(--dark);
             padding: 20px;
             background-attachment: fixed;
         }
@@ -72,45 +74,35 @@ $result = $conn->query("SELECT * FROM kandidat");
         .container {
             width: 100%;
             max-width: 1200px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
+            background: #fff;
+            border-radius: 12px;
             padding: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             text-align: center;
             animation: fadeIn 0.8s ease-out;
             position: relative;
             overflow: hidden;
         }
         
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            z-index: -1;
+        .logo {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--accent);
         }
         
         h2 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 25px;
-            font-weight: 700;
-            background: linear-gradient(to right, #fff, #f8f9fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            color: var(--primary);
             position: relative;
-            display: inline-block;
+            padding-bottom: 15px;
         }
         
         h2::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 60px;
@@ -122,7 +114,7 @@ $result = $conn->query("SELECT * FROM kandidat");
         .form-description {
             font-size: 1.1rem;
             margin-bottom: 40px;
-            opacity: 0.9;
+            color: var(--secondary);
             line-height: 1.6;
             max-width: 800px;
             margin-left: auto;
@@ -142,15 +134,15 @@ $result = $conn->query("SELECT * FROM kandidat");
         
         .kandidat-card {
             background: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 0;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 2px solid transparent;
+            border: 2px solid var(--card-border);
             text-align: left;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -158,14 +150,14 @@ $result = $conn->query("SELECT * FROM kandidat");
         
         .kandidat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
         }
         
         .kandidat-option:checked + .kandidat-card {
             border-color: var(--accent);
-            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
-            background: rgba(248, 249, 250, 0.1);
+            box-shadow: 0 5px 15px rgba(22, 160, 133, 0.2);
+            background: rgba(22, 160, 133, 0.03);
         }
         
         .kandidat-option:checked + .kandidat-card::after {
@@ -190,8 +182,8 @@ $result = $conn->query("SELECT * FROM kandidat");
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-top-left-radius: 14px;
-            border-top-right-radius: 14px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
         
         .kandidat-info {
@@ -205,7 +197,7 @@ $result = $conn->query("SELECT * FROM kandidat");
             font-weight: 600;
             font-size: 1.3rem;
             margin-bottom: 10px;
-            color: white;
+            color: var(--primary);
         }
         
         .kandidat-detail {
@@ -219,24 +211,28 @@ $result = $conn->query("SELECT * FROM kandidat");
         .detail-title {
             font-weight: 600;
             margin-bottom: 5px;
-            color: #f8f9fa;
+            color: var(--secondary);
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
+            padding: 8px 10px;
+            background: var(--gray-light);
+            border-radius: 6px;
         }
         
         .detail-title i {
             transition: transform 0.3s ease;
+            color: var(--accent);
         }
         
         .detail-content {
             font-size: 0.95rem;
             line-height: 1.5;
-            color: rgba(255, 255, 255, 0.85);
+            color: var(--secondary);
             margin-top: 8px;
             padding: 10px;
-            background: rgba(0, 0, 0, 0.1);
+            background: var(--gray-light);
             border-radius: 8px;
             max-height: 0;
             overflow: hidden;
@@ -261,12 +257,12 @@ $result = $conn->query("SELECT * FROM kandidat");
             align-items: center;
             justify-content: center;
             padding: 15px 30px;
-            border-radius: 12px;
+            border-radius: 8px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1.1rem;
-            background: linear-gradient(45deg, var(--accent), #f72585d0);
+            background: var(--accent);
             color: white;
             border: none;
             cursor: pointer;
@@ -277,12 +273,12 @@ $result = $conn->query("SELECT * FROM kandidat");
         
         .btn-submit:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(45deg, #f72585, #f72585e6);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: #1abc9c;
         }
         
         .btn-submit:disabled {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--gray);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
@@ -290,34 +286,6 @@ $result = $conn->query("SELECT * FROM kandidat");
         
         .btn-submit i {
             margin-right: 10px;
-        }
-        
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: float linear infinite;
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
         }
         
         @keyframes fadeIn {
@@ -335,18 +303,19 @@ $result = $conn->query("SELECT * FROM kandidat");
             grid-column: 1 / -1;
             text-align: center;
             padding: 40px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--gray-light);
             border-radius: 12px;
+            color: var(--secondary);
         }
         
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
-                border-radius: 15px;
+                border-radius: 10px;
             }
             
             h2 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             
             .kandidat-grid {
@@ -360,9 +329,10 @@ $result = $conn->query("SELECT * FROM kandidat");
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
     <div class="container">
+        <div class="logo">
+            <i class="fas fa-vote-yea"></i>
+        </div>
         <h2>Pemilihan Ketua Kelas</h2>
         <p class="form-description">
             Pilih salah satu kandidat di bawah ini dengan bijak. Klik pada kartu kandidat untuk memilih, 
@@ -379,7 +349,7 @@ $result = $conn->query("SELECT * FROM kandidat");
                             <?php if (!empty($row['foto'])): ?>
                                 <img src="uploads/<?= htmlspecialchars($row['foto']) ?>" alt="Foto <?= htmlspecialchars($row['nama']) ?>" class="kandidat-image">
                             <?php else: ?>
-                                <img src="https://via.placeholder.com/350x200/3a0ca3/ffffff?text=<?= urlencode($row['nama']) ?>" alt="Foto <?= htmlspecialchars($row['nama']) ?>" class="kandidat-image">
+                                <img src="https://via.placeholder.com/350x200/ecf0f1/2c3e50?text=<?= urlencode($row['nama']) ?>" alt="Foto <?= htmlspecialchars($row['nama']) ?>" class="kandidat-image">
                             <?php endif; ?>
                             
                             <div class="kandidat-info">
@@ -413,7 +383,7 @@ $result = $conn->query("SELECT * FROM kandidat");
                     <?php endwhile; ?>
                 <?php else: ?>
                     <div class="no-candidates">
-                        <i class="fas fa-users fa-3x" style="margin-bottom: 20px;"></i>
+                        <i class="fas fa-users fa-3x" style="margin-bottom: 20px; color: var(--accent);"></i>
                         <h3>Belum Ada Kandidat</h3>
                         <p>Silakan hubungi administrator untuk menambahkan kandidat.</p>
                     </div>
@@ -429,34 +399,7 @@ $result = $conn->query("SELECT * FROM kandidat");
     </div>
 
     <script>
-        // Create floating particles
         document.addEventListener('DOMContentLoaded', function() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size between 2px and 6px
-                const size = Math.random() * 4 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation duration between 10s and 20s
-                const duration = Math.random() * 10 + 10;
-                particle.style.animationDuration = `${duration}s`;
-                
-                // Random delay
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-            
             // Prevent detail checkboxes from affecting the card selection
             const detailCheckboxes = document.querySelectorAll('.detail-checkbox');
             detailCheckboxes.forEach(checkbox => {
